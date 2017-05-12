@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Overlay</title>
+
+    <script src="/socket.io/socket.io.js"></script>
+
+    <link href="https://fonts.googleapis.com/css?family=Signika+Negative:600" rel="stylesheet">
+
+    <link rel="stylesheet" href="/stylesheets/style.css">
+
+    <link rel="stylesheet" href="/themes/cwoodley/build/css/style.css">
+    <link rel="stylesheet" href="/themes/cwoodley/fonts/bignoodletoo/stylesheet.css">
+    <script src="/bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="/bower_components/moment/min/moment.min.js"></script>
+
+    <!-- Slick -->
+    <script src="/bower_components/slick-carousel/slick/slick.min.js"></script>
+    <link rel="stylesheet" href="/bower_components/slick-carousel/slick/slick.css">
+    <link rel="stylesheet" href="/bower_components/slick-carousel/slick/slick-theme.css">
+
+    <!-- Timer -->
+    <script src="/themes/cwoodley/vendor/countdown.min.js"></script>
+    <script src="/bower_components/moment-countdown/dist/moment-countdown.min.js"></script>
+    <script src="/themes/cwoodley/javascripts/timer.js"></script>
+    <script>
+      $(document).ready(function(){
+        function setInitialData() {
+          $('#timer .hours').text(localStorage.getItem('timerHours'));
+          $('#timer .minutes').text(localStorage.getItem('timerMinutes'));
+
+          $('#campaignPage .data').text(localStorage.getItem('campaignPage'));
+          $('#currentTime .data').text(moment().format('h:mm a'));
+          $('#currentGame .data').text(localStorage.getItem('currentGame'));
+          $('#nextGame .data').text(localStorage.getItem('nextGame'));
+        }
+
+        setInitialData();
+
+        var socket = io();
+
+        socket.on('campaignPage', function(data) {
+          $('#campaignPage .data').text(data);
+          localStorage.setItem('campaignPage', data);
+        });
+
+        socket.on('currentGame', function (data) {
+          $('#currentGame .data').text(data);
+          localStorage.setItem('currentGame', data);
+        });
+
+        socket.on('nextGame', function (data) {
+          $('#nextGame .data').text(data);
+          localStorage.setItem('nextGame', data);
+        });
+      })
+    </script>
+  </head>
+  <body>
+    <div class="canvas" style="background: url('/themes/cwoodley/images/uvIekd-ed.jpg'); background-size: 87%;">
+
+      <div id="sidebar" class="panel-slate">
+        <div id="webcam">
+
+        </div>
+
+        <div id="currentTime" class="datablock">
+          <div class="title" style="margin-left: -7px;">
+            Local Time
+          </div>
+          <div class="data">
+          </div>
+        </div>
+
+        <div id="timer" class="datablock">
+          <div class="title" style="margin-left: -6px;">time remaining</div>
+
+          <div class="data"><span class="hours"></span> <span class="minutes"></span></div>
+        </div>
+      </div>
+
+
+      <div id="footer">
+        <div id="campaignPage">
+          <div class="title">Donate:</div>
+          <div class="data">http://bit.ly/2eRLabX</div>
+        </div>
+
+        <div id="ticker" class="panel-slate">
+          <ul id="tickerItems">
+            <li id="currentGame">
+              <span class="title">Now:</span>
+              <span class="data"></span>
+            </li>
+            <li id="nextGame">
+              <span class="title">Next:</span>
+              <span class="data"></span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
